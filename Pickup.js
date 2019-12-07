@@ -1,8 +1,8 @@
 function Pickup(pickupType, locX, locY) {
   this.x = locX;
   this.y = locY;
-  this.w = 32;
-  this.h = 32;
+  this.w = cellSize;
+  this.h = cellSize;
 
   if (pickupType == 0) {
     this.row = 0;
@@ -12,7 +12,7 @@ function Pickup(pickupType, locX, locY) {
     this.scoreValue = 20;
   }
   this.sx = 0;
-  this.sy = this.row * this.h;
+  this.sy = this.row * 32;//this.h;
   //0 = coin
   //1 = gem
   this.totalFrames = 8;
@@ -26,10 +26,10 @@ function Pickup(pickupType, locX, locY) {
 
   this.display = function() {
     copy(objects,
-      this.sx, this.sy, this.w, this.h,
+      this.sx, this.sy, 32, 32,
       this.x, this.y, this.w, this.h);
 
-    this.sx = this.currentFrame * this.w;
+    this.sx = this.currentFrame * 32;//this.w;
 
     this.hold = (this.hold + 1) % this.delay;
     if (this.hold == 0) {

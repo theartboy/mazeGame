@@ -97,14 +97,19 @@ function preload() {
   music.setLoop(true);
 
 }
-
+var cellSize;
 function setup() {
-  createCanvas(640, 700);
+  pixelDensity(3.0);
+  // createCanvas(640, 700);
+  createCanvas(windowWidth, windowHeight);
+  cellSize = windowWidth/20;
   background(0);
   rows = 20;
   cols = 20;
-  cellWidth = 32;
-  cellHeight = 32;
+  // cellWidth = 32;
+  // cellHeight = 32;
+  cellWidth = cellSize;
+  cellHeight = cellSize;
   s = new Sprite(BONE);
   // art = loadImage("mazeart.png");
   // sheet = loadImage("characters2x.png");
@@ -115,12 +120,12 @@ function setup() {
 
   //pickupType values
   //0 = coin
-  //1 = gem
+  //1 = gemcellSize
   // pickups = new Pickup[4];
-  pickups[0] = new Pickup(1, 10 * 32, 7 * 32);
-  pickups[1] = new Pickup(0, 12 * 32, 7 * 32);
-  pickups[2] = new Pickup(1, 14 * 32, 7 * 32);
-  pickups[3] = new Pickup(0, 16 * 32, 7 * 32);
+  pickups[0] = new Pickup(1, 10 * cellSize, 7 * cellSize);
+  pickups[1] = new Pickup(0, 12 * cellSize, 7 * cellSize);
+  pickups[2] = new Pickup(1, 14 * cellSize, 7 * cellSize);
+  pickups[3] = new Pickup(0, 16 * cellSize, 7 * cellSize);
 
   score = 0;
 
@@ -133,10 +138,10 @@ function setup() {
 
   // enemies = new Enemy[4];
   //art type, x, y, collide with walls
-  enemies[0] = new Enemy(SLIME, 4 * 32, 3 * 32, true);
-  enemies[1] = new Enemy(BAT, 8 * 32, 3 * 32, false);
-  enemies[2] = new Enemy(GHOST, 4 * 32, 18 * 32, false);
-  enemies[3] = new Enemy(SPIDER, 15 * 32, 15 * 32, false);
+  enemies[0] = new Enemy(SLIME, 4 * cellSize, 3 * cellSize, true);
+  enemies[1] = new Enemy(BAT, 8 * cellSize, 3 * cellSize, false);
+  enemies[2] = new Enemy(GHOST, 4 * cellSize, 18 * cellSize, false);
+  enemies[3] = new Enemy(SPIDER, 15 * cellSize, 15 * cellSize, false);
   //REMOVE LATER
   //currentEnemy = enemies[0];
   // eightBitFont = createFont("8-Bit-Madness.ttf", 64);
@@ -248,8 +253,9 @@ function statePlay() {
 
   //UI
   fill(255);
-  text("Score: " + score, 32, 16);
-  text("Time: " + currentTime, 32 * 4, 16);
+  textAlign(LEFT);
+  text("Score: " + score, cellSize, 16);
+  text("Time: " + currentTime, cellSize * 6, 16);
 
   fill(255, 0, 0, 200);
   rect(goal.x, goal.y, cellWidth, cellHeight);
@@ -508,12 +514,12 @@ function renderMap() {
         case 0:
           //floor
           fill(100, 200, 0, 255);
-          rect(j * cellWidth, i * cellHeight, 32, 32);
+          rect(j * cellWidth, i * cellHeight, cellSize, cellSize);
           break;
         case 1:
           //wall
           fill(200, 100, 0, 255);
-          rect(j * cellWidth, i * cellHeight, 32, 32);
+          rect(j * cellWidth, i * cellHeight, cellSize, cellSize);
           break;
         default:
           println("You did not make the map right.");

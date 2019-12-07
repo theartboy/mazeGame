@@ -1,8 +1,8 @@
 function Enemy(character, startX, startY, wall) {
   this.x = startX;
   this.y = startY;
-  this.w = 32;
-  this.h = 32;
+  this.w = cellSize;
+  this.h = cellSize;
   this.sx = 0;
   this.sy = 0;
   this.row = 0;
@@ -65,7 +65,7 @@ function Enemy(character, startX, startY, wall) {
     this.dead = true;
   }
   this.update = function() {
-    if (dist(s.x, s.y, this.x, this.y) < 200 && !this.dead) {
+    if (dist(s.x, s.y, this.x, this.y) < 200*cellSize/32 && !this.dead) {
       if (abs(s.x - this.x) < abs(s.y - this.y)) {
         //close y gap
         if (this.y < s.y) {
@@ -124,8 +124,8 @@ function Enemy(character, startX, startY, wall) {
     this.x += this.vx;
     this.y += this.vy;
 
-    this.sx = this.currentFrame * this.w;
-    this.sy = this.row * this.h;
+    this.sx = this.currentFrame * 32;//this.w;
+    this.sy = this.row * 32;//this.h;
 
     if (this.vx == 0 && this.vy == 0) {
       if (enemySounds[this.type].isPlaying()) {
@@ -137,7 +137,7 @@ function Enemy(character, startX, startY, wall) {
   }
 
   this.display = function() {
-    copy(sheet, this.sx + this.offsetX, this.sy + this.offsetY, this.w, this.h, this.x, this.y, this.w, this.h);
+    copy(sheet, this.sx + this.offsetX, this.sy + this.offsetY, 32, 32, this.x, this.y, this.w, this.h);
 
     this.hold = (this.hold + 1) % this.delay;
     if (this.hold == 0) {
