@@ -186,7 +186,7 @@ function stateStart() {
 function characterToPlay(characterType) {
   s = new Sprite(characterType);
   if (!music.isPlaying()) {
-    // music.play();
+    music.play();
   }
   gameState = "PLAY";
 }
