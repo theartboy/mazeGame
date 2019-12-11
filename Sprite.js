@@ -1,13 +1,12 @@
 function Sprite(character) {
-  this.x = width / 2;
-  this.y = 320;
-  this.w = cellSize;
-  this.h = cellSize;
+  this.startLoc = createVector(10 * 32, 10 * 32);
+  this.x = this.startLoc.x;
+  this.y = this.startLoc.y;
+  this.w = 32;
+  this.h = 32;
   this.sx = 0;
   this.sy = 0;
   this.row = 0;
-  this.vx = 0;
-  this.vy = 0;
   //characters SKIN, BOY, GIRL, BONE
   this.offsetX = character * 32;
   this.offsetY = 0 * 32;
@@ -22,6 +21,13 @@ function Sprite(character) {
   this.actions[1] = "Kick";
   this.actions[2] = "Wink";
 
+  this.vx = 0;
+  this.vy = 0;
+
+  this.reset = function() {
+    this.x = this.startLoc.x;
+    this.y = this.startLoc.y;
+  }
   this.update = function() {
     if (left && !right && !up && !down) {
       this.vx = -2;
@@ -62,19 +68,20 @@ function Sprite(character) {
     this.x += this.vx;
     this.y += this.vy;
 
-    this.sx = this.currentFrame * 32;//this.w;
-    this.sy = this.row * 32;//this.h;
+    this.sx = this.currentFrame * this.w;
+    this.sy = this.row * this.h;
+
     if (this.vx == 0 && this.vy == 0) {
-      if (sfxWalk.isPlaying()) {
+      if (sfxWalk.isPlaying() == true) {
         sfxWalk.pause();
       }
-    } else if (!sfxWalk.isPlaying()) {
+    } else if (sfxWalk.isPlaying() == false) {
       sfxWalk.loop();
     }
   }
 
   this.display = function() {
-    copy(sheet, this.sx + this.offsetX, this.sy + this.offsetY, 32, 32, this.x, this.y, this.w, this.h);
+    copy(sheet, this.sx + this.offsetX, this.sy + this.offsetY, this.w, this.h, this.x, this.y, this.w, this.h);
 
     this.hold = (this.hold + 1) % this.delay;
     if (this.hold == 0) {
@@ -83,5 +90,6 @@ function Sprite(character) {
         this.currentFrame = 0;
       }
     }
+
   }
 }
