@@ -19,24 +19,23 @@ function stateCombat(e) {
   text(s.actions[2], 550, height-100);
 
   if (mouseIsPressed && !fighting) {
-    if (dist(mouseX, mouseY, 300, height-100) < 50) {
+    if (circleMouseIntersect(300, height-100, 50)) {
       // println("ROCK");
       sfxPunch.play();
       fight(0, e);
     }
-    if (dist(mouseX, mouseY, 425, height-100) < 50) {
+    if (circleMouseIntersect(425, height-100, 50)) {
       // println("PAPER");
       sfxKick.play();
       fight(1, e);
     }
-    if (dist(mouseX, mouseY, 550, height-100) < 50) {
+    if (circleMouseIntersect(550, height-100, 50)) {
       // println("SCISSORS");
       sfxStare.play();
       fight(2, e);
     }
   } else if (mouseIsPressed && fighting &&
-    mouseX>width/2-200 && mouseX<width/2+200 &&
-    mouseY>height/2-100 && mouseY<height/2+100) {
+    boxMouseIntersect(width/2-200,height/2-100,400,200)) {
       fighting = false;
       e.hide();
       gameState = "PLAY";
@@ -78,6 +77,4 @@ function fight(playerChoice, e) {
     combatResult = s.actions[playerChoice] + " \nis wrecked by\n"+e.actions[enemyChoice];
     score -= 100;
   }
-  // println(combatResult);
-  //fighting = false;
 }

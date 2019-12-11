@@ -38,15 +38,15 @@ var score;
 
 var gameState;
 
-var SKIN = 0;
-var BOY = 3;
-var GIRL = 6;
-var BONE = 9;
+const SKIN = 0;
+const BOY = 3;
+const GIRL = 6;
+const BONE = 9;
 
-var SLIME = 0;
-var BAT = 3;
-var GHOST = 6;
-var SPIDER = 9;
+const SLIME = 0;
+const BAT = 3;
+const GHOST = 6;
+const SPIDER = 9;
 
 var enemies = [];
 
@@ -169,38 +169,24 @@ function stateStart() {
   copy(characterChoice, 128, 0, 128, 128, 180, 300, 128, 128);
   copy(characterChoice, 256, 0, 128, 128, 332, 300, 128, 128);
   copy(characterChoice, 384, 0, 128, 128, 484, 300, 128, 128);
-  if (mouseIsPressed &&
-    mouseX > 28 && mouseX < 156 &&
-    mouseY > 300 && mouseY < 428) {
-    changeToPlay(SKIN);
+  if (mouseIsPressed && boxMouseIntersect(28,300,128,128)) {
+    characterToPlay(SKIN);
   }
-  if (mouseIsPressed &&
-    mouseX > 180 && mouseX < 308 &&
-    mouseY > 300 && mouseY < 428) {
-    changeToPlay(BOY);
+  if (mouseIsPressed && boxMouseIntersect(180,300,128,128)) {
+    characterToPlay(BOY);
   }
-  if (mouseIsPressed &&
-    mouseX > 332 && mouseX < 460 &&
-    mouseY > 300 && mouseY < 428) {
-    changeToPlay(GIRL);
+  if (mouseIsPressed && boxMouseIntersect(332,300,128,128)) {
+    characterToPlay(GIRL);
   }
-  if (mouseIsPressed &&
-    mouseX > 484 && mouseX < 612 &&
-    mouseY > 300 && mouseY < 428) {
-    changeToPlay(BONE);
+  if (mouseIsPressed && boxMouseIntersect(484,300,128,128)) {
+    characterToPlay(BONE);
   }
-  // if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2) < 50) {
-  //   if (!music.isPlaying()){
-  //     music.play();
-  //   }
-  //   gameState = "PLAY";
-  // }
 }
 
-function changeToPlay(characterType) {
+function characterToPlay(characterType) {
   s = new Sprite(characterType);
   if (!music.isPlaying()) {
-    music.play();
+    // music.play();
   }
   gameState = "PLAY";
 }
@@ -279,7 +265,7 @@ function stateWin() {
   text("Winner, Winner, Chicken Dinner", width / 2, height / 2 - 200);
   textAlign(LEFT);
   ellipse(width / 2, height / 2-100, 100, 100);
-  if (mouseIsPressed && dist(mouseX, mouseY, width / 2, height / 2-100) < 50) {
+  if (mouseIsPressed && circleMouseIntersect(width / 2-100, height / 2, 50) ) {
     gameState = "RESET";
   }
 }
@@ -292,7 +278,7 @@ function stateLose() {
   text("Loser all day long", width / 2, height / 2 - 200);
   textAlign(LEFT);
   ellipse(width / 2, height / 2-100, 100, 100);
-  if (mouseIsPressed && dist(mouseX, mouseY, width / 2-100, height / 2) < 50) {
+  if (mouseIsPressed && circleMouseIntersect(width / 2-100, height / 2, 50) ) {
     gameState = "RESET";
   }
 }
@@ -318,87 +304,7 @@ function stopSFX() {
   }
 }
 
-function rectangleIntersect(r1, r2) {
-  //what is the distance apart on x-axis
-  var distanceX = (r1.x + r1.w / 2) - (r2.x + r2.w / 2);
-  //what is the distance apart on y-axis
-  var distanceY = (r1.y + r1.h / 2) - (r2.y + r2.h / 2);
 
-  //what is the combined half-widths
-  var combinedHalfW = r1.w / 2 + r2.w / 2;
-  //what is the combined half-heights
-  var combinedHalfH = r1.h / 2 + r2.h / 2;
-
-  //check for intersection on x-axis
-  if (abs(distanceX) < combinedHalfW) {
-    //check for intersection on y-axis
-    if (abs(distanceY) < combinedHalfH) {
-      //huzzah they are intersecting
-      return true;
-    }
-  }
-  return false;
-}
-
-
-function checkWallCollisions(s) {
-  var collisionSide = "";
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
-      //check if the tile is a wall
-      if (tileMap[i][j] == 1) {
-        //determine the distance apart on the X axis
-        var distX = floor((s.x + s.w / 2) - (j * cellWidth + cellWidth / 2));
-        //determine the distance apart on the Y axis
-        var distY = floor((s.y + s.h / 2) - (i * cellHeight + cellHeight / 2));
-        //determine the sum of the half width of the object and the wall
-        var combinedHalfWidths = floor(s.w / 2 + cellWidth / 2);
-        //determine the sum of the half height and the wall
-        var combinedHalfHeights = floor(s.h / 2 + cellHeight / 2);
-        //check if they are overlapping on the X axis
-        if (abs(distX) < combinedHalfWidths) {
-          //check if they are overlapping on the Y axis
-          //if so, a collision has occurred
-          if (abs(distY) < combinedHalfHeights) {
-            //compute the overlap of the object and the wall
-            //on both the X and Y axes
-            var overlapX = combinedHalfWidths - abs(distX);
-            var overlapY = combinedHalfHeights - abs(distY);
-            //the collision occurred on the axis with the smallest overlap
-            if (overlapX >= overlapY) {
-              //because distY is the object Y minus the wall Y
-              //a positive value indicates the object started below
-              //the wall and was moving up when the collision occurred
-              //so it has hit its top into the wall
-              if (distY > 0) {
-                collisionSide = "TOPSIDE";
-                //move the object down so it is no longer overlapping the wall
-                s.y += overlapY;
-              } else {
-                collisionSide = "BOTTOMSIDE";
-                //move the object up so it is no longer overlapping the wall
-                s.y -= overlapY;
-              }
-            } else {
-              //same logic as the Y axis collision
-              if (distX > 0) {
-                collisionSide = "LEFTSIDE";
-                //move the object to the right so it is no longer overlapping the wall
-                s.x += overlapX;
-              } else {
-                collisionSide = "RIGHTSIDE";
-                //move the object to the left so it is no longer overlapping the wall
-                s.x -= overlapX;
-              }
-            }
-          } else {
-            collisionSide = "NONE";
-          }
-        }
-      }
-    }
-  }
-}
 
 function renderMap() {
   for (var i = 0; i < rows; i++) {
@@ -426,8 +332,6 @@ function renderMap() {
 function keyPressed() {
   if (gameState == "PLAY" && !timerStartCounting) {
     timerStartCounting = true;
-    // gameTimer.start();
-    console.log("count");
   }
 
   switch (keyCode) {
